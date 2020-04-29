@@ -1,8 +1,9 @@
 <?php
 
-namespace common\models;
+namespace common\components\plot\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "plot".
@@ -13,7 +14,7 @@ use Yii;
  * @property float $price
  * @property float $area
  */
-class Plot extends \yii\db\ActiveRecord
+class Plot extends ActiveRecord
 {
     /**
      * {@inheritdoc}
