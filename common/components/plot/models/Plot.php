@@ -33,7 +33,7 @@ class Plot extends ActiveRecord
             [['cadastralNumber', 'address', 'price', 'area'], 'required'],
             [['price', 'area'], 'number'],
             [['cadastralNumber'], 'string', 'max' => 20],
-            [['address'], 'string', 'max' => 255],
+            [['address'], 'string'],
         ];
     }
 
