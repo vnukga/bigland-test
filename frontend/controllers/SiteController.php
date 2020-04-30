@@ -74,7 +74,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $plots = Yii::$app->plot->run();
+        return $this->render('index', [
+
+        ]);
     }
 
     /**

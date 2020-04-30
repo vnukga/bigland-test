@@ -43,11 +43,11 @@ class Plot extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'cadastralNumber' => Yii::t('app', 'Cadastral Number'),
-            'address' => Yii::t('app', 'Address'),
-            'price' => Yii::t('app', 'Price'),
-            'area' => Yii::t('app', 'Area'),
+            'id' => 'ID',
+            'cadastralNumber' => 'Кадастровый номер',
+            'address' => 'Адрес',
+            'price' => 'Стоимость',
+            'area' => 'Площадь',
         ];
     }
 }

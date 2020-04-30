@@ -63,11 +63,11 @@ class GetPlotsService implements ServiceInterface
     public function run(array $cadastralNumbers = null)
     {
         if(!$cadastralNumbers){
-            return $this->getPlotFromDatabaseService->run();
-        }
-
-        foreach ($cadastralNumbers as $cadastralNumber) {
-            $this->plots[] = $this->getPlotService->run($cadastralNumber);
+            $this->plots = $this->getPlotFromDatabaseService->run();
+        } else {
+            foreach ($cadastralNumbers as $cadastralNumber) {
+                $this->plots[] = $this->getPlotService->run(trim($cadastralNumber));
+            }
         }
         $dataProvider = $this->getPlotsAsDataProviderService->run($this->plots);
         return  $dataProvider;
