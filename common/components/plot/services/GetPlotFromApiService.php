@@ -3,8 +3,6 @@
 
 namespace common\components\plot\services;
 
-
-use common\components\plot\exceptions\PlotNotFoundException;
 use common\components\plot\models\Plot;
 use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
@@ -49,20 +47,17 @@ class GetPlotFromApiService implements ServiceInterface
      * Запуск службы
      *
      * @param string|null $cadastralNumber
-     * @return Plot
-     * @throws PlotNotFoundException
-     * @throws InvalidConfigException
+     * @return array|null
      * @throws Exception
+     * @throws InvalidConfigException
      */
-    public function run(string $cadastralNumber = null) : Plot
+    public function run(string $cadastralNumber = null) : ?array
     {
-        if(!$cadastralNumber) {
-            throw new PlotNotFoundException();
+        if($cadastralNumber && $response = $this->getApiResponse($cadastralNumber)){
+            $plot = $this->createPlotFromResponse($response);
+            return [$plot];
         }
-
-        $response = $this->getApiResponse($cadastralNumber);
-        $plot = $this->createPlotFromResponse($response);
-        return $plot;
+        return null;
     }
 
     /**
@@ -70,11 +65,10 @@ class GetPlotFromApiService implements ServiceInterface
      *
      * @param string $cadastralNumber
      * @return string
-     * @throws PlotNotFoundException
      * @throws InvalidConfigException
      * @throws Exception
      */
-    private function getApiResponse(string $cadastralNumber) : string
+    private function getApiResponse(string $cadastralNumber) : ?string
     {
         $response = $this->client->createRequest()
             ->setMethod($this->method)
@@ -88,10 +82,9 @@ class GetPlotFromApiService implements ServiceInterface
             ])
             ->send();
         if(!$response->isOk) {
-            throw new PlotNotFoundException();
+            return null;
         }
-        $content = $response->getContent();
-        return $content;
+        return $response->getContent();
     }
 
     /**

@@ -3,9 +3,7 @@
 
 namespace console\controllers;
 
-
-use common\components\plot\services\GetPlotsService;
-use common\components\plot\services\ServiceInterface;
+use Yii;
 use yii\console\Controller;
 
 /**
@@ -16,13 +14,6 @@ use yii\console\Controller;
 class ParserController extends Controller
 {
     /**
-     * Служба для получения данных участков
-     *
-     * @var GetPlotsService|ServiceInterface
-     */
-    private ServiceInterface $getPlotsService;
-
-    /**
      * Путь к файлу вида для рендеринга данных
      *
      * @var string
@@ -32,7 +23,6 @@ class ParserController extends Controller
     public function __construct($id, $module, $config = [])
     {
         parent::__construct($id, $module, $config);
-        $this->getPlotsService = new GetPlotsService();
         $this->view = __DIR__ . '/../views/parser.php';
     }
 
@@ -44,7 +34,7 @@ class ParserController extends Controller
     public function actionParse(string $cadastralNumbers)
     {
         $cadastralNumbers = explode(',', $cadastralNumbers);
-        $plots = $this->getPlotsService->run($cadastralNumbers);
+        $plots = Yii::$app->plot->run($cadastralNumbers);
         $view = require $this->view;
         echo $view;
     }

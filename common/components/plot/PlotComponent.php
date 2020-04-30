@@ -3,6 +3,9 @@
 
 namespace common\components\plot;
 
+use common\components\plot\exceptions\PlotNotFoundException;
+use common\components\plot\formatters\ArrayDataProviderFormatter;
+use common\components\plot\formatters\FormatterInterface;
 use common\components\plot\services\GetPlotsService;
 use common\components\plot\services\ServiceInterface;
 use yii\base\Component;
@@ -24,10 +27,18 @@ class PlotComponent extends Component
      */
     private ServiceInterface $getPlotsService;
 
+    /**
+     * Класс для форматирования данных
+     *
+     * @var FormatterInterface
+     */
+    private FormatterInterface $formatter;
+
     public function __construct($config = [])
     {
         parent::__construct($config);
         $this->getPlotsService = new GetPlotsService();
+        $this->formatter = new ArrayDataProviderFormatter();
     }
 
     /**
@@ -35,12 +46,15 @@ class PlotComponent extends Component
      *
      * @param array|null $cadastralNumbers
      * @return array|models\Plot|mixed|ActiveRecord[]|null
+     * @throws PlotNotFoundException
      * @throws InvalidConfigException
      * @throws Exception
-     * @throws exceptions\PlotNotFoundException
      */
     public function run(array $cadastralNumbers = null)
     {
-        return $this->getPlotsService->run($cadastralNumbers);
-    }
-}
+        $plots = $this->getPlotsService->run($cadastralNumbers);
+        if(!$plots) {
+            throw new PlotNotFoundException();
+        }
+        return $this->formatter->format($plots);
+    }}

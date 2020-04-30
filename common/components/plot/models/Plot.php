@@ -2,11 +2,10 @@
 
 namespace common\components\plot\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "plot".
+ * Класс для таблицы 'plot'
  *
  * @property int $id
  * @property string $cadastralNumber

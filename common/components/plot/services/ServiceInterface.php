@@ -15,5 +15,5 @@ interface ServiceInterface
      *
      * @return mixed
      */
-    public function run();
+    public function run() : ?array;
 }

@@ -3,10 +3,8 @@
 
 namespace common\components\plot\services;
 
-use common\components\plot\exceptions\PlotNotFoundException;
 use common\components\plot\models\Plot;
 use yii\base\InvalidConfigException;
-use yii\data\ArrayDataProvider;
 use yii\httpclient\Exception;
 
 /**
@@ -17,25 +15,18 @@ use yii\httpclient\Exception;
 class GetPlotsService implements ServiceInterface
 {
     /**
-     * Служба для получения данных конкретного участка
+     * Служба для получения данных по участкам из БД
      *
-     * @var GetPlotService|ServiceInterface
+     * @var ServiceInterface
      */
-    private ServiceInterface $getPlotService;
+    private ServiceInterface $databaseService;
 
     /**
-     * Служба для получения данных участка из БД
+     * Служба для получения данных от внешнего сервера
      *
-     * @var GetPlotFromDatabaseService|ServiceInterface
+     * @var ServiceInterface
      */
-    private ServiceInterface $getPlotFromDatabaseService;
-
-    /**
-     * Служба для получения данных в виде ArrayDataProvider
-     *
-     * @var GetPlotsAsDataProviderService|ServiceInterface
-     */
-    private ServiceInterface $getPlotsAsDataProviderService;
+    private ServiceInterface $apiService;
 
     /**
      * Данные об участках
@@ -46,30 +37,46 @@ class GetPlotsService implements ServiceInterface
 
     public function __construct()
     {
-        $this->getPlotService = new GetPlotService();
-        $this->getPlotFromDatabaseService = new GetPlotFromDatabaseService();
-        $this->getPlotsAsDataProviderService = new GetPlotsAsDataProviderService();
+        $this->databaseService = new GetPlotsFromDatabaseService();
+        $this->apiService = new GetPlotFromApiService();
     }
 
     /**
      * Запуск службы
      *
      * @param array|null $cadastralNumbers
-     * @return array|Plot|mixed|ArrayDataProvider|Plot[]|null
-     * @throws PlotNotFoundException
+     * @return Plot[]|null
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
+    public function run(array $cadastralNumbers = null) : ?array
+    {
+        if(!$cadastralNumbers){
+            $this->plots = $this->databaseService->run();
+        } else {
+            foreach ($cadastralNumbers as $cadastralNumber) {
+                if($plot = $this->getPlot(trim($cadastralNumber))) {
+                    $this->plots = array_merge($this->plots, $plot);
+                }
+            }
+        }
+        return  $this->plots;
+    }
+
+    /**
+     * ПОлучение данных об участке
+     *
+     * @param string $cadastralNumber
+     * @return array|null
      * @throws InvalidConfigException
      * @throws Exception
      */
-    public function run(array $cadastralNumbers = null)
+    private function getPlot(string $cadastralNumber) : ?array
     {
-        if(!$cadastralNumbers){
-            $this->plots = $this->getPlotFromDatabaseService->run();
-        } else {
-            foreach ($cadastralNumbers as $cadastralNumber) {
-                $this->plots[] = $this->getPlotService->run(trim($cadastralNumber));
-            }
+        $plot = $this->databaseService->run($cadastralNumber);
+        if(!$plot){
+            $plot = $this->apiService->run($cadastralNumber);
         }
-        $dataProvider = $this->getPlotsAsDataProviderService->run($this->plots);
-        return  $dataProvider;
+        return $plot;
     }
 }

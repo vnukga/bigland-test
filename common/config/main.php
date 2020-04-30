@@ -1,4 +1,7 @@
 <?php
+
+use common\components\plot\PlotComponent;
+
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -8,6 +11,9 @@ return [
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'plot' => [
+            'class' => PlotComponent::class
         ],
     ],
 ];

@@ -1,7 +1,5 @@
 <?php
 
-use common\components\plot\PlotComponent;
-
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -17,9 +15,6 @@ return [
     'defaultRoute' => 'plot/index',
     'language' => 'ru-RU',
     'components' => [
-        'plot' => [
-            'class' => PlotComponent::class
-        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
