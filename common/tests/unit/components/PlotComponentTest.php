@@ -18,12 +18,6 @@ class PlotComponentTest extends Unit
         $this->component = new PlotComponent();
     }
 
-    public function testRunWithoutParameters()
-    {
-        $plots = $this->component->run();
-        $this->assertInstanceOf(ArrayDataProvider::class, $plots);
-    }
-
     public function testRunWithValidParameters()
     {
         $cadastralNumbers = '69:27:0000022:1306, 69:27:0000022:1307';
@@ -48,5 +42,17 @@ class PlotComponentTest extends Unit
         $models = $plots->allModels;
         $this->assertInstanceOf(Plot::class, $models[0]);
         $this->assertEquals(1, count($models));
+    }
+
+    public function testRunWithoutParameters()
+    {
+        $this->expectException(PlotNotFoundException::class);
+        $this->component->run();
+
+        $cadastralNumbers = '69:27:0000022:1306, 69:27:0000022:1307';
+        $this->component->run(explode(',',$cadastralNumbers));
+
+        $plots = $this->component->run();
+        $this->assertInstanceOf(ArrayDataProvider::class, $plots);
     }
 }
