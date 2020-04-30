@@ -46,9 +46,6 @@ class PlotComponentTest extends Unit
 
     public function testRunWithoutParameters()
     {
-        $this->expectException(PlotNotFoundException::class);
-        $this->component->run();
-
         $cadastralNumbers = '69:27:0000022:1306, 69:27:0000022:1307';
         $this->component->run(explode(',',$cadastralNumbers));
 
