@@ -57,4 +57,5 @@ class PlotComponent extends Component
             throw new PlotNotFoundException();
         }
         return $this->formatter->format($plots);
-    }}
+    }
+}
