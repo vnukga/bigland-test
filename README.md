@@ -1,60 +1,69 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 Advanced Project Template</h1>
-    <br>
-</p>
+Установка проекта
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
+1. Стянуть репозиторий:
+`git@github.com:vnukga/bigland-test.git`
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+2. Подтянуть зависимости:
+`composer install`
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
+3. Инициализировать проект
+`php init`
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+4. Прописать настройки подключения к БД в файле 'common\config\main-local.php'
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Build Status](https://travis-ci.com/yiisoft/yii2-app-advanced.svg?branch=master)](https://travis-ci.com/yiisoft/yii2-app-advanced)
+5. Применить миграции:
+`yii migrate`
 
-DIRECTORY STRUCTURE
--------------------
+6. Настроить webroot сервера на директорию 'public'
 
-```
-common
-    config/              contains shared configurations
-    mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
-    tests/               contains tests for common classes    
-console
-    config/              contains console configurations
-    controllers/         contains console controllers (commands)
-    migrations/          contains database migrations
-    models/              contains console-specific model classes
-    runtime/             contains files generated during runtime
-backend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
-    controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for backend application    
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-frontend
-    assets/              contains application assets such as JavaScript and CSS
-    config/              contains frontend configurations
-    controllers/         contains Web controller classes
-    models/              contains frontend-specific model classes
-    runtime/             contains files generated during runtime
-    tests/               contains tests for frontend application
-    views/               contains view files for the Web application
-    web/                 contains the entry script and Web resources
-    widgets/             contains frontend widgets
-vendor/                  contains dependent 3rd-party packages
-environments/            contains environment-based overrides
-```
+___
+Запуск тестов
+
+1. Прописать имя базы данных в файле 'common/config/test-local.php'
+
+2. Выбрать в IDE конфигурацию 'codeception.yml'
+    
+    ![Выбор конфигурации](/screenshots/codeception.png?raw=true "Выбор конфигурации")
+
+3. Запустить тесты
+
+___
+Использование компонента
+
+Компонент инициализируется как компонент приложения путём указания в 'common\config\main'
+ 
+        'components' => [
+            'plot' => [
+                'class' => PlotComponent::class
+            ],
+        ],
+Затем в нужно приложении вызывается метод `Yii::$app->plot->run()`, возвращающий список участков в виде ArrayDataProvider.
+При необходимости получения данных по конкретным участкам, их номера необходимо передать в данный метод массивом.
+
+- WEB
+
+Для использования необходимо открыть главную страницу приложения в браузере и ввести кадастровые номера необходимых участков через запятую.
+
+- REST
+
+Для получения данных по всем участкам из базы данных необходимо отправить GET-запрос на адрес '<your-domain>/api/v1/plots'
+
+- Консоль
+
+Для получения данных об участках через консоль, необходимо ввести
+
+`yii parser/parse 69:27:0000022:1306,69:27:0000022:1307,35`
+___
+Примеры использования
+
+- WEB
+
+    ![Использование компонента в WEB](/screenshots/web.png?raw=true "Использование компонента в WEB")
+
+- REST
+
+    ![Использование компонента в REST](/screenshots/rest.png?raw=true "Использование компонента в REST")
+    
+- Консоль
+
+    ![Использование компонента в консоли](/screenshots/console.png?raw=true "Использование компонента в консоли")
